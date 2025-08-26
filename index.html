@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FoodHub - Online Food Ordering</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --secondary: #2ec4b6;
+      --accent: #ff9f1c;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --success: #28a745;
+      --danger: #dc3545;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo i {
+      font-size: 2.5rem;
+    }
+    
+    .logo h1 {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px 15px;
+      border-radius: 50px;
+    }
+    
+    .user-info i {
+      font-size: 1.2rem;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+      padding: 12px 25px;
+      background-color: white;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .tab-btn:hover {
+      background-color: var(--light-gray);
+    }
+    
+    .tab-btn.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .container h2 {
+      color: var(--dark);
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--light-gray);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .container h2 i {
+      color: var(--primary);
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #e55a2b;
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #29a99a;
+      transform: translateY(-2px);
+    }
+    
+    .btn-full {
+      width: 100%;
+    }
+    
+    .message {
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-weight: 500;
+    }
+    
+    .message.success {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border-left: 4px solid var(--success);
+    }
+    
+    .message.error {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+    
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .product-image {
+      height: 180px;
+      overflow: hidden;
+    }
+    
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .product-info {
+      padding: 20px;
+    }
+    
+    .product-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+    
+    .product-category {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    
+    .product-description {
+      margin-bottom: 15px;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    
+    .product-price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .logout-section {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--light-gray);
+    }
+    
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-utensils"></i>
+        <h1>FoodHub</h1>
+      </div>
+      <div class="user-info">
+        <i class="fas fa-user-circle"></i>
+        <span id="current-user">Not logged in</span>
+      </div>
+    </header>
+    
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('user-register-container')">
+        <i class="fas fa-user-plus"></i> Register
+      </button>
+      <button class="tab-btn" onclick="showTab('user-login-container')">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+      <button class="tab-btn" onclick="showTab('products-container')">
+        <i class="fas fa-hamburger"></i> Products
+      </button>
+      <button class="tab-btn" onclick="showTab('add-product-container')">
+        <i class="fas fa-plus-circle"></i> Add Product
+      </button>
+    </div>
+    
+    <!-- User Register -->
+    <div class="container" id="user-register-container">
+      <h2><i class="fas fa-user-plus"></i> User Register</h2>
+      <div class="form-grid">
+        <div class="input-group">
+          <label for="userRegUsername">Username</label>
+          <input type="text" id="userRegUsername" placeholder="Enter username" required />
+        </div>
+        <div class="input-group">
+          <label for="userRegEmail">Email</label>
+          <input type="email" id="userRegEmail" placeholder="Enter email" required />
+        </div>
+        <div class="input-group">
+          <label for="userRegPassword">Password</label>
+          <input type="password" id="userRegPassword" placeholder="Enter password" required />
+        </div>
+        <div class="input-group">
+          <label for="userRegRole">Role</label>
+          <select id="userRegRole">
+            <option value="user">User</option>
+            <option value="delivery">Delivery Boy</option>
+            <option value="owner">Owner</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="userRegister()">
+        <i class="fas fa-user-plus"></i> Register User
+      </button>
+      <div id="userRegisterMessage"></div>
+    </div>
+
+    <!-- User Login -->
+    <div class="container hidden" id="user-login-container">
+      <h2><i class="fas fa-sign-in-alt"></i> User Login</h2>
+      <div class="form-grid">
+        <div class="input-group">
+          <label for="userLoginEmail">Email</label>
+          <input type="email" id="userLoginEmail" placeholder="Enter email" required />
+        </div>
+        <div class="input-group">
+          <label for="userLoginPassword">Password</label>
+          <input type="password" id="userLoginPassword" placeholder="Enter password" required />
+        </div>
+        <div class="input-group">
+          <label for="userLoginRole">Role</label>
+          <select id="userLoginRole">
+            <option value="user">User</option>
+            <option value="delivery">Delivery Boy</option>
+            <option value="owner">Owner</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="userLogin()">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+      <div id="userLoginMessage"></div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="container hidden" id="products-container">
+      <h2><i class="fas fa-hamburger"></i> Products</h2>
+      <button class="btn btn-secondary" onclick="fetchProducts()">
+        <i class="fas fa-sync-alt"></i> Load Products
+      </button>
+      <button class="btn btn-primary" onclick="addSampleProducts()">
+        <i class="fas fa-plus"></i> Add Sample Products
+      </button>
+      <div class="products-grid" id="products-list"></div>
+      <div id="productsMessage"></div>
+    </div>
+
+    <!-- Add Product (for owner/delivery/admin) -->
+    <div class="container hidden" id="add-product-container">
+      <h2><i class="fas fa-plus-circle"></i> Add New Product</h2>
+      <div class="form-grid">
+        <div class="input-group">
+          <label for="productName">Name</label>
+          <input type="text" id="productName" placeholder="Product name" required />
+        </div>
+        <div class="input-group">
+          <label for="productPrice">Price (₹)</label>
+          <input type="number" id="productPrice" placeholder="Price" required />
+        </div>
+        <div class="input-group">
+          <label for="productCategory">Category</label>
+          <input type="text" id="productCategory" placeholder="Category" />
+        </div>
+        <div class="input-group">
+          <label for="productImage">Image URL</label>
+          <input type="text" id="productImage" placeholder="Image URL" />
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="productDescription">Description</label>
+        <input type="text" id="productDescription" placeholder="Description" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="addProduct()">
+        <i class="fas fa-plus"></i> Add Product
+      </button>
+      <div id="addProductMessage"></div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="logout-section">
+      <button class="btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+      <div id="logoutMessage"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://backendlogin-f7jd.onrender.com";
+
+    // Store token and user info in localStorage
+    function saveAuth(token, user) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      updateUserInfo();
+    }
+    
+    function getAuthToken() {
+      return localStorage.getItem("token");
+    }
+    
+    function getCurrentUser() {
+      try {
+        return JSON.parse(localStorage.getItem("user"));
+      } catch {
+        return null;
+      }
+    }
+    
+    function clearAuth() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      updateUserInfo();
+    }
+    
+    function updateUserInfo() {
+      const user = getCurrentUser();
+      const userInfoEl = document.getElementById("current-user");
+      
+      if (user) {
+        userInfoEl.textContent = `${user.username || user.name || user.email} (${user.role || 'user'})`;
+      } else {
+        userInfoEl.textContent = "Not logged in";
+      }
+    }
+
+    // Tab navigation
+    function showTab(tabId) {
+      // Hide all containers
+      document.querySelectorAll('.container').forEach(container => {
+        container.classList.add('hidden');
+      });
+      
+      // Show selected container
+      document.getElementById(tabId).classList.remove('hidden');
+      
+      // Update active tab button
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Find and activate the clicked tab button
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      for (let btn of tabButtons) {
+        if (btn.onclick.toString().includes(tabId)) {
+          btn.classList.add('active');
+          break;
+        }
+      }
+    }
+
+    // ===== User Register =====
+    async function userRegister() {
+      const username = document.getElementById("userRegUsername").value.trim();
+      const email = document.getElementById("userRegEmail").value.trim();
+      const password = document.getElementById("userRegPassword").value;
+      const role = document.getElementById("userRegRole").value;
+
+      const messageEl = document.getElementById("userRegisterMessage");
+      messageEl.textContent = "";
+      messageEl.className = "message";
+      
+      if (!username || !email || !password) {
+        showError(messageEl, "Please fill all required fields.");
+        return;
+      }
+
+      try {
+        // Delivery boy register uses separate API. Handle for role delivery differently.
+        if (role === "delivery") {
+          const res = await fetch(API_BASE + "/api/delivery/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: username, email, password, phone: "" })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            showSuccess(messageEl, data.message || "Delivery boy registered successfully.");
+          } else {
+            showError(messageEl, data.message || "Failed to register delivery boy.");
+          }
+          return;
+        }
+
+        // Owner register is not open via API; only hardcoded login.
+        if (role === "owner") {
+          showError(messageEl, "Owner registration not allowed via this form. Use hardcoded credentials for login.");
+          return;
+        }
+
+        // Normal user register
+        const res = await fetch(API_BASE + "/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password, role })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showSuccess(messageEl, data.message || "User registered successfully.");
+        } else {
+          showError(messageEl, data.message || "Registration failed.");
+        }
+      } catch (error) {
+        showError(messageEl, "Server error: " + error.message);
+      }
+    }
+
+    // ===== User Login =====
+    async function userLogin() {
+      const email = document.getElementById("userLoginEmail").value.trim();
+      const password = document.getElementById("userLoginPassword").value;
+      const role = document.getElementById("userLoginRole").value;
+
+      const messageEl = document.getElementById("userLoginMessage");
+      messageEl.textContent = "";
+      messageEl.className = "message";
+      
+      if (!email || !password) {
+        showError(messageEl, "Please fill all fields.");
+        return;
+      }
+
+      // Handle login API based on role
+      try {
+        let url = API_BASE + "/login";
+        let body = { email, password };
+        if (role === "delivery") {
+          url = API_BASE + "/api/delivery/login";
+        }
+        if (role === "owner") {
+          url = API_BASE + "/owner/login";
+        }
+
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          saveAuth(data.token, data.user || data.deliveryBoy || null);
+          showSuccess(messageEl, "Login successful. Welcome " + (data.user?.username || data.deliveryBoy?.name || "Owner") + "!");
+          showTab('products-container');
+          loadProductsAfterLogin();
+        } else {
+          showError(messageEl, data.message || "Login failed.");
+        }
+      } catch (error) {
+        showError(messageEl, "Server error: " + error.message);
+      }
+    }
+
+    // ===== Fetch Products =====
+    async function fetchProducts() {
+      const messageEl = document.getElementById("productsMessage");
+      messageEl.textContent = "";
+      messageEl.className = "message";
+      
+      try {
+        const res = await fetch(API_BASE + "/products");
+        const data = await res.json();
+        if (res.ok) {
+          displayProducts(data);
+          showSuccess(messageEl, "Products loaded successfully.");
+        } else {
+          showError(messageEl, "Failed to load products.");
+        }
+      } catch (error) {
+        showError(messageEl, "Server error: " + error.message);
+      }
+    }
+
+    function displayProducts(products) {
+      const list = document.getElementById("products-list");
+      list.innerHTML = "";
+      
+      if (!products.length) {
+        list.innerHTML = "<p>No products found</p>";
+        return;
+      }
+      
+      for (const p of products) {
+        const productEl = document.createElement("div");
+        productEl.className = "product-card";
+        productEl.innerHTML = `
+          <div class="product-image">
+            <img src="${p.image || 'https://via.placeholder.com/300x180?text=Food+Image'}" alt="${p.name}" />
+          </div>
+          <div class="product-info">
+            <h3 class="product-title">${p.name}</h3>
+            <div class="product-category">${p.category || 'Uncategorized'}</div>
+            <p class="product-description">${p.description || 'No description available.'}</p>
+            <div class="product-price">₹${p.price}</div>
+          </div>
+        `;
+        list.appendChild(productEl);
+      }
+    }
+
+    // ===== Add Sample Products =====
+    async function addSampleProducts() {
+      const messageEl = document.getElementById("productsMessage");
+      messageEl.textContent = "";
+      messageEl.className = "message";
+      
+      try {
+        const res = await fetch(API_BASE + "/add-sample-products", { method: "POST" });
+        const data = await res.json();
+        if (res.ok) {
+          showSuccess(messageEl, data.message || "Sample products added.");
+          fetchProducts();
+        } else {
+          showError(messageEl, data.message || "Failed to add sample products.");
+        }
+      } catch (error) {
+        showError(messageEl, "Server error: " + error.message);
+      }
+    }
+
+    // ===== Add New Product =====
+    async function addProduct() {
+      const name = document.getElementById("productName").value.trim();
+      const description = document.getElementById("productDescription").value.trim();
+      const price = parseFloat(document.getElementById("productPrice").value);
+      const category = document.getElementById("productCategory").value.trim();
+      const image = document.getElementById("productImage").value.trim();
+
+      const messageEl = document.getElementById("addProductMessage");
+      messageEl.textContent = "";
+      messageEl.className = "message";
+      
+      if (!name || !price || isNaN(price)) {
+        showError(messageEl, "Please fill valid name and price.");
+        return;
+      }
+
+      try {
+        // Only allow if logged in
+        const token = getAuthToken();
+        if (!token) {
+          showError(messageEl, "You must be logged in to add products.");
+          return;
+        }
+
+        const res = await fetch(API_BASE + "/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ name, description, price, category, image })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showSuccess(messageEl, data.message || "Product added successfully.");
+          // Clear form
+          document.getElementById("productName").value = "";
+          document.getElementById("productDescription").value = "";
+          document.getElementById("productPrice").value = "";
+          document.getElementById("productCategory").value = "";
+          document.getElementById("productImage").value = "";
+          
+          fetchProducts();
+        } else {
+          showError(messageEl, data.message || "Failed to add product.");
+        }
+      } catch (error) {
+        showError(messageEl, "Server error: " + error.message);
+      }
+    }
+
+    // ===== Logout =====
+    function logout() {
+      clearAuth();
+      const messageEl = document.getElementById("logoutMessage");
+      showSuccess(messageEl, "Logged out successfully.");
+      showTab('user-login-container');
+    }
+
+    // Helper functions for messages
+    function showSuccess(el, message) {
+      el.textContent = message;
+      el.className = "message success";
+    }
+    
+    function showError(el, message) {
+      el.textContent = message;
+      el.className = "message error";
+    }
+
+    // Load products if logged in when page loads
+    function loadProductsAfterLogin() {
+      fetchProducts();
+    }
+
+    // On page load: if user logged in, fetch products automatically
+    window.onload = () => {
+      updateUserInfo();
+      if (getAuthToken()) {
+        showTab('products-container');
+        loadProductsAfterLogin();
+      } else {
+        showTab('user-register-container');
+      }
+    };
+  </script>
+</body>
+</html>
